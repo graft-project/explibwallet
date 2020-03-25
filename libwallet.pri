@@ -1,10 +1,27 @@
 INCLUDEPATH += $$PWD
 
 android {
+    INCLUDEPATH += $$PWD/include/external/android 
+
+    LIBS += -L$$PWD/wallet/android/$$ANDROID_TARGET_ARCH/
+    LIBS += -L$$PWD/boost/lib/android/$$ANDROID_TARGET_ARCH/
+    LIBS += -L$$PWD/openssl/lib/android/$$ANDROID_TARGET_ARCH/
+
+    # XXX: order matters (utils first), wont link otherwise (undefined reference to cn_clow_hash, chacha8)
+    LIBS += -lwallet_merged -leasylogging -lepee -lunbound -llmdb -lssl -lcrypto -lsodium
+    # boost
+    LIBS += -lboost_filesystem \
+            -lboost_program_options \
+            -lboost_regex \
+            -lboost_serialization \
+            -lboost_system \
+            -lboost_thread \
+	    -lboost_chrono
+	    
 } else {
     linux {
-    LIBS += -L$$PWD/wallet/linux -lwallet_merged -leasylogging -lepee -lunbound
-    LIBS += -lssl -lcrypto
+    LIBS += -L$$PWD/wallet/linux
+    LIBS += -lwallet_merged -leasylogging -lepee -lunbound -llmdb -lssl -lcrypto -lsodium
     LIBS += -lboost_filesystem \
             -lboost_program_options \
             -lboost_regex \
